@@ -1,7 +1,6 @@
 let form=document.getElementById('my-form');
 form.addEventListener('submit',store);
 let itemList=document.getElementById('items')
-itemList.addEventListener('click',removeItem);
 function store(e){
     e.preventDefault()
     let temp=document.getElementById('name').value;
@@ -17,6 +16,7 @@ function store(e){
     })
     .catch((err)=>console.log(err))
     
+    
 };
 
 function addItem(item){
@@ -29,3 +29,15 @@ function addItem(item){
     li.appendChild(deleteBtn);
     itemList.appendChild(li);
 }
+
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/48d7a40849b04ef9be7b0db200499821/cloud")
+    .then((response)=>{
+        for (var i=0;i<response.data.length;i++){
+            addItem(response.data[i]);
+        }
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+})
