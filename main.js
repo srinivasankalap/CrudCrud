@@ -1,6 +1,7 @@
 let form=document.getElementById('my-form');
 form.addEventListener('submit',store);
 let itemList=document.getElementById('items')
+itemList.addEventListener('click',removeItem);
 function store(e){
     e.preventDefault()
     let temp=document.getElementById('name').value;
@@ -41,3 +42,32 @@ window.addEventListener("DOMContentLoaded",()=>{
         console.log(err);
     })
 })
+
+function removeItem(e){
+    if (e.target.classList.contains('delete')){
+        const listItem=e.target.parentElement;
+        const email=listItem.textContent.split(' - ')[1].slice(0,-6);
+        console.log(email);
+        axios.get("https://crudcrud.com/api/48d7a40849b04ef9be7b0db200499821/cloud")
+        .then((response)=>{
+            const userData = response.data;
+                let userIdToDelete = null;
+                
+                for (let i = 0; i < userData.length; i++) {
+                    if (userData[i].mailID == email) {
+                        userIdToDelete = userData[i]._id;
+                        break;
+                    }
+                }
+            console.log(userIdToDelete);
+            if(userIdToDelete){
+                axios.delete(`https://crudcrud.com/api/48d7a40849b04ef9be7b0db200499821/cloud/${userIdToDelete}`)
+                .then(()=>{
+                    itemList.removeChild(listItem)
+                })
+                .catch((err)=>console.log(err))
+            }
+        })
+        .catch((err)=> console.log(err))
+    }
+}
